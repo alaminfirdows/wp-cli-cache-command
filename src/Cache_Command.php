@@ -642,7 +642,7 @@ class Cache_Command extends WP_CLI_Command {
 			WP_CLI::success( "Post cache for ID $post_id cleared." );
 		} else {
 			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
-				WP_CLI::error( 'Flushing all post caches requires WordPress 6.1+ or a persistent object cache with group flushing support.' );
+				WP_CLI::error( 'Flushing all post caches requires WordPress 6.1+' );
 			}
 			wp_cache_flush_group( 'posts' );
 			wp_cache_flush_group( 'post_meta' );
@@ -680,7 +680,7 @@ class Cache_Command extends WP_CLI_Command {
 			WP_CLI::success( "Term cache for ID $term_id cleared." );
 		} else {
 			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
-				WP_CLI::error( 'Flushing all term caches requires WordPress 6.1+ or a persistent object cache with group flushing support.' );
+				WP_CLI::error( 'Flushing all term caches requires WordPress 6.1+' );
 			}
 			wp_cache_flush_group( 'terms' );
 			wp_cache_flush_group( 'term_meta' );
@@ -718,7 +718,7 @@ class Cache_Command extends WP_CLI_Command {
 			WP_CLI::success( "Comment cache for ID $comment_id cleared." );
 		} else {
 			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
-				WP_CLI::error( 'Flushing all comment caches requires WordPress 6.1+ or a persistent object cache with group flushing support.' );
+				WP_CLI::error( 'Flushing all comment caches requires WordPress 6.1+' );
 			}
 			wp_cache_flush_group( 'comment' );
 			wp_cache_flush_group( 'comment_meta' );
@@ -756,7 +756,7 @@ class Cache_Command extends WP_CLI_Command {
 			WP_CLI::success( "User cache for ID $user_id cleared." );
 		} else {
 			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
-				WP_CLI::error( 'Flushing all user caches requires WordPress 6.1+ or a persistent object cache with group flushing support.' );
+				WP_CLI::error( 'Flushing all user caches requires WordPress 6.1+' );
 			}
 			wp_cache_flush_group( 'users' );
 			wp_cache_flush_group( 'user_meta' );
@@ -795,7 +795,7 @@ class Cache_Command extends WP_CLI_Command {
 			WP_CLI::success( "Option cache for '$option_name' cleared." );
 		} else {
 			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
-				WP_CLI::error( 'Flushing all option caches requires WordPress 6.1+ or a persistent object cache with group flushing support.' );
+				WP_CLI::error( 'Flushing all option caches requires WordPress 6.1+' );
 			}
 			wp_cache_flush_group( 'options' );
 			WP_CLI::success( 'Option caches cleared.' );
