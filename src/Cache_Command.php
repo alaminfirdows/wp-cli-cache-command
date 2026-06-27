@@ -611,4 +611,179 @@ class Cache_Command extends WP_CLI_Command {
 			}
 		}
 	}
+
+	/**
+	 * Clears post related caches.
+	 *
+	 * @subcommand flush-post
+	 *
+	 * ## OPTIONS
+	 *
+	 * [<id>]
+	 * : Post ID. If not specified, clears all post caches.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Clear all post caches.
+	 *     $ wp cache flush-post
+	 *     Success: Post caches cleared.
+	 *
+	 *     # Clear cache for a specific post.
+	 *     $ wp cache flush-post 123
+	 *     Success: Post cache for ID 123 cleared.
+	 *
+	 * @param array $args Positional arguments.
+	 */
+	public function flush_post( $args ) {
+		$post_id = ! empty( $args ) ? (int) $args[0] : null;
+
+		if ( $post_id ) {
+			clean_post_cache( $post_id );
+			WP_CLI::success( "Post cache for ID $post_id cleared." );
+		} else {
+			wp_cache_flush_group( 'posts' );
+			wp_cache_flush_group( 'post_meta' );
+			WP_CLI::success( 'Post caches cleared.' );
+		}
+	}
+
+	/**
+	 * Clears term related caches.
+	 *
+	 * @subcommand flush-term
+	 *
+	 * ## OPTIONS
+	 *
+	 * [<id>]
+	 * : Term ID. If not specified, clears all term caches.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Clear all term caches.
+	 *     $ wp cache flush-term
+	 *     Success: Term caches cleared.
+	 *
+	 *     # Clear cache for a specific term.
+	 *     $ wp cache flush-term 5
+	 *     Success: Term cache for ID 5 cleared.
+	 *
+	 * @param array $args Positional arguments.
+	 */
+	public function flush_term( $args ) {
+		$term_id = ! empty( $args ) ? (int) $args[0] : null;
+
+		if ( $term_id ) {
+			clean_term_cache( $term_id );
+			WP_CLI::success( "Term cache for ID $term_id cleared." );
+		} else {
+			wp_cache_flush_group( 'terms' );
+			wp_cache_flush_group( 'term_meta' );
+			WP_CLI::success( 'Term caches cleared.' );
+		}
+	}
+
+	/**
+	 * Clears comment related caches.
+	 *
+	 * @subcommand flush-comment
+	 *
+	 * ## OPTIONS
+	 *
+	 * [<id>]
+	 * : Comment ID. If not specified, clears all comment caches.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Clear all comment caches.
+	 *     $ wp cache flush-comment
+	 *     Success: Comment caches cleared.
+	 *
+	 *     # Clear cache for a specific comment.
+	 *     $ wp cache flush-comment 42
+	 *     Success: Comment cache for ID 42 cleared.
+	 *
+	 * @param array $args Positional arguments.
+	 */
+	public function flush_comment( $args ) {
+		$comment_id = ! empty( $args ) ? (int) $args[0] : null;
+
+		if ( $comment_id ) {
+			clean_comment_cache( $comment_id );
+			WP_CLI::success( "Comment cache for ID $comment_id cleared." );
+		} else {
+			wp_cache_flush_group( 'comment' );
+			wp_cache_flush_group( 'comment_meta' );
+			WP_CLI::success( 'Comment caches cleared.' );
+		}
+	}
+
+	/**
+	 * Clears user related caches.
+	 *
+	 * @subcommand flush-user
+	 *
+	 * ## OPTIONS
+	 *
+	 * [<id>]
+	 * : User ID. If not specified, clears all user caches.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Clear all user caches.
+	 *     $ wp cache flush-user
+	 *     Success: User caches cleared.
+	 *
+	 *     # Clear cache for a specific user.
+	 *     $ wp cache flush-user 1
+	 *     Success: User cache for ID 1 cleared.
+	 *
+	 * @param array $args Positional arguments.
+	 */
+	public function flush_user( $args ) {
+		$user_id = ! empty( $args ) ? (int) $args[0] : null;
+
+		if ( $user_id ) {
+			clean_user_cache( $user_id );
+			WP_CLI::success( "User cache for ID $user_id cleared." );
+		} else {
+			wp_cache_flush_group( 'users' );
+			wp_cache_flush_group( 'user_meta' );
+			WP_CLI::success( 'User caches cleared.' );
+		}
+	}
+
+	/**
+	 * Clears option related caches.
+	 *
+	 * @subcommand flush-option
+	 *
+	 * ## OPTIONS
+	 *
+	 * [<name>]
+	 * : Option name. If not specified, clears all option caches.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Clear all option caches.
+	 *     $ wp cache flush-option
+	 *     Success: Option caches cleared.
+	 *
+	 *     # Clear cache for a specific option.
+	 *     $ wp cache flush-option my_option
+	 *     Success: Option cache for 'my_option' cleared.
+	 *
+	 * @param array $args Positional arguments.
+	 */
+	public function flush_option( $args ) {
+		$option_name = ! empty( $args ) ? $args[0] : null;
+
+		if ( $option_name ) {
+			wp_cache_delete( 'alloptions', 'options' );
+			wp_cache_delete( $option_name, 'options' );
+			WP_CLI::success( "Option cache for '$option_name' cleared." );
+		} else {
+			wp_cache_flush_group( 'options' );
+			WP_CLI::success( 'Option caches cleared.' );
+		}
+	}
 }
