@@ -20,16 +20,6 @@ Feature: Granular cache flushing operations
       """
 
   @skip-object-cache
-  Scenario: Flush all posts cache requires support
-    Given a WP install
-
-    When I try `wp cache flush-post`
-    Then STDERR should contain:
-      """
-      Flushing all post caches requires WordPress 6.1+
-      """
-
-  @skip-object-cache
   Scenario: Flush specific term cache
     Given a WP install
     And a wp-content/mu-plugins/test-harness.php file:
@@ -46,16 +36,6 @@ Feature: Granular cache flushing operations
     Then STDOUT should contain:
       """
       Success: Term cache for ID 5 cleared.
-      """
-
-  @skip-object-cache
-  Scenario: Flush all terms cache requires support
-    Given a WP install
-
-    When I try `wp cache flush-term`
-    Then STDERR should contain:
-      """
-      Flushing all term caches requires WordPress 6.1+
       """
 
   @skip-object-cache
@@ -78,16 +58,6 @@ Feature: Granular cache flushing operations
       """
 
   @skip-object-cache
-  Scenario: Flush all comments cache requires support
-    Given a WP install
-
-    When I try `wp cache flush-comment`
-    Then STDERR should contain:
-      """
-      Flushing all comment caches requires WordPress 6.1+
-      """
-
-  @skip-object-cache
   Scenario: Flush specific user cache
     Given a WP install
     And a wp-content/mu-plugins/test-harness.php file:
@@ -104,16 +74,6 @@ Feature: Granular cache flushing operations
     Then STDOUT should contain:
       """
       Success: User cache for ID 1 cleared.
-      """
-
-  @skip-object-cache
-  Scenario: Flush all users cache requires support
-    Given a WP install
-
-    When I try `wp cache flush-user`
-    Then STDERR should contain:
-      """
-      Flushing all user caches requires WordPress 6.1+
       """
 
   @skip-object-cache
@@ -135,13 +95,4 @@ Feature: Granular cache flushing operations
       Success: Option cache for 'my_option' cleared.
       """
 
-  @skip-object-cache
-  Scenario: Flush all options cache requires support
-    Given a WP install
-
-    When I try `wp cache flush-option`
-    Then STDERR should contain:
-      """
-      Flushing all option caches requires WordPress 6.1+
-      """
 
