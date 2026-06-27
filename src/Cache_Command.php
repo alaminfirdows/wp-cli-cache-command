@@ -632,7 +632,7 @@ class Cache_Command extends WP_CLI_Command {
 	 *     $ wp cache flush-post 123
 	 *     Success: Post cache for ID 123 cleared.
 	 *
-	 * @param array $args Positional arguments.
+	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_post( $args ) {
 		$post_id = ! empty( $args ) ? (int) $args[0] : null;
@@ -667,7 +667,7 @@ class Cache_Command extends WP_CLI_Command {
 	 *     $ wp cache flush-term 5
 	 *     Success: Term cache for ID 5 cleared.
 	 *
-	 * @param array $args Positional arguments.
+	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_term( $args ) {
 		$term_id = ! empty( $args ) ? (int) $args[0] : null;
@@ -702,7 +702,7 @@ class Cache_Command extends WP_CLI_Command {
 	 *     $ wp cache flush-comment 42
 	 *     Success: Comment cache for ID 42 cleared.
 	 *
-	 * @param array $args Positional arguments.
+	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_comment( $args ) {
 		$comment_id = ! empty( $args ) ? (int) $args[0] : null;
@@ -737,7 +737,7 @@ class Cache_Command extends WP_CLI_Command {
 	 *     $ wp cache flush-user 1
 	 *     Success: User cache for ID 1 cleared.
 	 *
-	 * @param array $args Positional arguments.
+	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_user( $args ) {
 		$user_id = ! empty( $args ) ? (int) $args[0] : null;
@@ -772,7 +772,7 @@ class Cache_Command extends WP_CLI_Command {
 	 *     $ wp cache flush-option my_option
 	 *     Success: Option cache for 'my_option' cleared.
 	 *
-	 * @param array $args Positional arguments.
+	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_option( $args ) {
 		$option_name = ! empty( $args ) ? $args[0] : null;
