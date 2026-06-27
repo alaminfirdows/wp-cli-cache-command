@@ -1,7 +1,7 @@
 Feature: Granular cache flushing operations
 
   @skip-object-cache
-  Scenario: Flush post cache
+  Scenario: Flush specific post cache
     Given a WP install
     And a wp-content/mu-plugins/test-harness.php file:
       """
@@ -13,12 +13,6 @@ Feature: Granular cache flushing operations
       WP_CLI::add_hook( 'before_invoke:cache flush-post', $cache_post );
       """
 
-    When I run `wp cache flush-post`
-    Then STDOUT should contain:
-      """
-      Success: Post caches cleared.
-      """
-
     When I run `wp cache flush-post 123`
     Then STDOUT should contain:
       """
@@ -26,7 +20,17 @@ Feature: Granular cache flushing operations
       """
 
   @skip-object-cache
-  Scenario: Flush term cache
+  Scenario: Flush all posts cache requires support
+    Given a WP install
+
+    When I try `wp cache flush-post`
+    Then STDERR should contain:
+      """
+      Flushing all post caches requires WordPress 6.1+
+      """
+
+  @skip-object-cache
+  Scenario: Flush specific term cache
     Given a WP install
     And a wp-content/mu-plugins/test-harness.php file:
       """
@@ -38,12 +42,6 @@ Feature: Granular cache flushing operations
       WP_CLI::add_hook( 'before_invoke:cache flush-term', $cache_term );
       """
 
-    When I run `wp cache flush-term`
-    Then STDOUT should contain:
-      """
-      Success: Term caches cleared.
-      """
-
     When I run `wp cache flush-term 5`
     Then STDOUT should contain:
       """
@@ -51,7 +49,17 @@ Feature: Granular cache flushing operations
       """
 
   @skip-object-cache
-  Scenario: Flush comment cache
+  Scenario: Flush all terms cache requires support
+    Given a WP install
+
+    When I try `wp cache flush-term`
+    Then STDERR should contain:
+      """
+      Flushing all term caches requires WordPress 6.1+
+      """
+
+  @skip-object-cache
+  Scenario: Flush specific comment cache
     Given a WP install
     And a wp-content/mu-plugins/test-harness.php file:
       """
@@ -63,12 +71,6 @@ Feature: Granular cache flushing operations
       WP_CLI::add_hook( 'before_invoke:cache flush-comment', $cache_comment );
       """
 
-    When I run `wp cache flush-comment`
-    Then STDOUT should contain:
-      """
-      Success: Comment caches cleared.
-      """
-
     When I run `wp cache flush-comment 42`
     Then STDOUT should contain:
       """
@@ -76,7 +78,17 @@ Feature: Granular cache flushing operations
       """
 
   @skip-object-cache
-  Scenario: Flush user cache
+  Scenario: Flush all comments cache requires support
+    Given a WP install
+
+    When I try `wp cache flush-comment`
+    Then STDERR should contain:
+      """
+      Flushing all comment caches requires WordPress 6.1+
+      """
+
+  @skip-object-cache
+  Scenario: Flush specific user cache
     Given a WP install
     And a wp-content/mu-plugins/test-harness.php file:
       """
@@ -88,12 +100,6 @@ Feature: Granular cache flushing operations
       WP_CLI::add_hook( 'before_invoke:cache flush-user', $cache_user );
       """
 
-    When I run `wp cache flush-user`
-    Then STDOUT should contain:
-      """
-      Success: User caches cleared.
-      """
-
     When I run `wp cache flush-user 1`
     Then STDOUT should contain:
       """
@@ -101,7 +107,17 @@ Feature: Granular cache flushing operations
       """
 
   @skip-object-cache
-  Scenario: Flush option cache
+  Scenario: Flush all users cache requires support
+    Given a WP install
+
+    When I try `wp cache flush-user`
+    Then STDERR should contain:
+      """
+      Flushing all user caches requires WordPress 6.1+
+      """
+
+  @skip-object-cache
+  Scenario: Flush specific option cache
     Given a WP install
     And a wp-content/mu-plugins/test-harness.php file:
       """
@@ -113,14 +129,19 @@ Feature: Granular cache flushing operations
       WP_CLI::add_hook( 'before_invoke:cache flush-option', $cache_option );
       """
 
-    When I run `wp cache flush-option`
-    Then STDOUT should contain:
-      """
-      Success: Option caches cleared.
-      """
-
     When I run `wp cache flush-option my_option`
     Then STDOUT should contain:
       """
       Success: Option cache for 'my_option' cleared.
       """
+
+  @skip-object-cache
+  Scenario: Flush all options cache requires support
+    Given a WP install
+
+    When I try `wp cache flush-option`
+    Then STDERR should contain:
+      """
+      Flushing all option caches requires WordPress 6.1+
+      """
+
