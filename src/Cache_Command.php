@@ -635,17 +635,22 @@ class Cache_Command extends WP_CLI_Command {
 	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_post( $args ) {
-		$post_id = ! empty( $args ) ? (int) $args[0] : null;
-
-		if ( $post_id ) {
+		if ( ! empty( $args ) ) {
+			if ( ! is_numeric( $args[0] ) ) {
+				WP_CLI::error( 'Please provide a valid post ID.' );
+			}
+			$post_id = (int) $args[0];
 			clean_post_cache( $post_id );
 			WP_CLI::success( "Post cache for ID $post_id cleared." );
 		} else {
-			if ( ! wp_using_ext_object_cache() || ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
+			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
 				WP_CLI::error( 'Flushing all post caches requires WordPress 6.1+' );
 			}
-			wp_cache_flush_group( 'posts' );
-			wp_cache_flush_group( 'post_meta' );
+			$posts_flushed = wp_cache_flush_group( 'posts' );
+			$post_meta_flushed = wp_cache_flush_group( 'post_meta' );
+			if ( ! $posts_flushed || ! $post_meta_flushed ) {
+				WP_CLI::error( 'Failed to flush post caches.' );
+			}
 			WP_CLI::success( 'Post caches cleared.' );
 		}
 	}
@@ -673,17 +678,22 @@ class Cache_Command extends WP_CLI_Command {
 	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_term( $args ) {
-		$term_id = ! empty( $args ) ? (int) $args[0] : null;
-
-		if ( $term_id ) {
+		if ( ! empty( $args ) ) {
+			if ( ! is_numeric( $args[0] ) ) {
+				WP_CLI::error( 'Please provide a valid term ID.' );
+			}
+			$term_id = (int) $args[0];
 			clean_term_cache( $term_id );
 			WP_CLI::success( "Term cache for ID $term_id cleared." );
 		} else {
-			if ( ! wp_using_ext_object_cache() || ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
+			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
 				WP_CLI::error( 'Flushing all term caches requires WordPress 6.1+' );
 			}
-			wp_cache_flush_group( 'terms' );
-			wp_cache_flush_group( 'term_meta' );
+			$terms_flushed = wp_cache_flush_group( 'terms' );
+			$term_meta_flushed = wp_cache_flush_group( 'term_meta' );
+			if ( ! $terms_flushed || ! $term_meta_flushed ) {
+				WP_CLI::error( 'Failed to flush term caches.' );
+			}
 			WP_CLI::success( 'Term caches cleared.' );
 		}
 	}
@@ -711,17 +721,22 @@ class Cache_Command extends WP_CLI_Command {
 	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_comment( $args ) {
-		$comment_id = ! empty( $args ) ? (int) $args[0] : null;
-
-		if ( $comment_id ) {
+		if ( ! empty( $args ) ) {
+			if ( ! is_numeric( $args[0] ) ) {
+				WP_CLI::error( 'Please provide a valid comment ID.' );
+			}
+			$comment_id = (int) $args[0];
 			clean_comment_cache( $comment_id );
 			WP_CLI::success( "Comment cache for ID $comment_id cleared." );
 		} else {
-			if ( ! wp_using_ext_object_cache() || ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
+			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
 				WP_CLI::error( 'Flushing all comment caches requires WordPress 6.1+' );
 			}
-			wp_cache_flush_group( 'comment' );
-			wp_cache_flush_group( 'comment_meta' );
+			$comment_flushed = wp_cache_flush_group( 'comment' );
+			$comment_meta_flushed = wp_cache_flush_group( 'comment_meta' );
+			if ( ! $comment_flushed || ! $comment_meta_flushed ) {
+				WP_CLI::error( 'Failed to flush comment caches.' );
+			}
 			WP_CLI::success( 'Comment caches cleared.' );
 		}
 	}
@@ -749,17 +764,22 @@ class Cache_Command extends WP_CLI_Command {
 	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_user( $args ) {
-		$user_id = ! empty( $args ) ? (int) $args[0] : null;
-
-		if ( $user_id ) {
+		if ( ! empty( $args ) ) {
+			if ( ! is_numeric( $args[0] ) ) {
+				WP_CLI::error( 'Please provide a valid user ID.' );
+			}
+			$user_id = (int) $args[0];
 			clean_user_cache( $user_id );
 			WP_CLI::success( "User cache for ID $user_id cleared." );
 		} else {
-			if ( ! wp_using_ext_object_cache() || ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
+			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
 				WP_CLI::error( 'Flushing all user caches requires WordPress 6.1+' );
 			}
-			wp_cache_flush_group( 'users' );
-			wp_cache_flush_group( 'user_meta' );
+			$users_flushed = wp_cache_flush_group( 'users' );
+			$user_meta_flushed = wp_cache_flush_group( 'user_meta' );
+			if ( ! $users_flushed || ! $user_meta_flushed ) {
+				WP_CLI::error( 'Failed to flush user caches.' );
+			}
 			WP_CLI::success( 'User caches cleared.' );
 		}
 	}
@@ -787,17 +807,19 @@ class Cache_Command extends WP_CLI_Command {
 	 * @param array<string> $args Positional arguments.
 	 */
 	public function flush_option( $args ) {
-		$option_name = ! empty( $args ) ? $args[0] : null;
-
-		if ( $option_name ) {
+		if ( ! empty( $args ) ) {
+			$option_name = $args[0];
 			wp_cache_delete( 'alloptions', 'options' );
 			wp_cache_delete( $option_name, 'options' );
 			WP_CLI::success( "Option cache for '$option_name' cleared." );
 		} else {
-			if ( ! wp_using_ext_object_cache() || ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
+			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
 				WP_CLI::error( 'Flushing all option caches requires WordPress 6.1+' );
 			}
-			wp_cache_flush_group( 'options' );
+			$options_flushed = wp_cache_flush_group( 'options' );
+			if ( ! $options_flushed ) {
+				WP_CLI::error( 'Failed to flush option caches.' );
+			}
 			WP_CLI::success( 'Option caches cleared.' );
 		}
 	}
