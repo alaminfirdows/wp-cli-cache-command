@@ -7,12 +7,12 @@ Feature: Granular cache flushing operations
       """
       <?php
       $cache_post = function(){
-        wp_cache_set( 'post_123', array( 'ID' => 123, 'post_title' => 'Test' ), 'posts' );
-        wp_cache_set( 'meta_123', array( 'key' => 'value' ), 'post_meta' );
+        wp_cache_set( 123, array( 'ID' => 123, 'post_title' => 'Test' ), 'posts' );
+        wp_cache_set( 123, array( 'key' => 'value' ), 'post_meta' );
       };
       $verify_cache_cleared = function(){
-        $post = wp_cache_get( 'post_123', 'posts' );
-        $meta = wp_cache_get( 'meta_123', 'post_meta' );
+        $post = wp_cache_get( 123, 'posts' );
+        $meta = wp_cache_get( 123, 'post_meta' );
         if ( false !== $post || false !== $meta ) {
           WP_CLI::error( 'Cache was not properly cleared.' );
         }
@@ -34,12 +34,12 @@ Feature: Granular cache flushing operations
       """
       <?php
       $cache_term = function(){
-        wp_cache_set( 'term_5', array( 'term_id' => 5 ), 'terms' );
-        wp_cache_set( 'term_meta_5', array(), 'term_meta' );
+        wp_cache_set( 5, array( 'term_id' => 5 ), 'terms' );
+        wp_cache_set( 5, array(), 'term_meta' );
       };
       $verify_cache_cleared = function(){
-        $term = wp_cache_get( 'term_5', 'terms' );
-        $meta = wp_cache_get( 'term_meta_5', 'term_meta' );
+        $term = wp_cache_get( 5, 'terms' );
+        $meta = wp_cache_get( 5, 'term_meta' );
         if ( false !== $term || false !== $meta ) {
           WP_CLI::error( 'Cache was not properly cleared.' );
         }
@@ -55,18 +55,28 @@ Feature: Granular cache flushing operations
       """
 
   @skip-object-cache
+  Scenario: Flush cache for an existing term resolves its taxonomy
+    Given a WP install
+
+    When I run `wp cache flush-term 1`
+    Then STDOUT should contain:
+      """
+      Success: Term cache for ID 1 cleared.
+      """
+
+  @skip-object-cache
   Scenario: Flush specific comment cache
     Given a WP install
     And a wp-content/mu-plugins/test-harness.php file:
       """
       <?php
       $cache_comment = function(){
-        wp_cache_set( 'comment_42', array(), 'comment' );
-        wp_cache_set( 'comment_meta_42', array(), 'comment_meta' );
+        wp_cache_set( 42, array(), 'comment' );
+        wp_cache_set( 42, array(), 'comment_meta' );
       };
       $verify_cache_cleared = function(){
-        $comment = wp_cache_get( 'comment_42', 'comment' );
-        $meta = wp_cache_get( 'comment_meta_42', 'comment_meta' );
+        $comment = wp_cache_get( 42, 'comment' );
+        $meta = wp_cache_get( 42, 'comment_meta' );
         if ( false !== $comment || false !== $meta ) {
           WP_CLI::error( 'Cache was not properly cleared.' );
         }
@@ -88,12 +98,12 @@ Feature: Granular cache flushing operations
       """
       <?php
       $cache_user = function(){
-        wp_cache_set( 'user_1', array( 'ID' => 1 ), 'users' );
-        wp_cache_set( 'user_meta_1', array(), 'user_meta' );
+        wp_cache_set( 1, array( 'ID' => 1 ), 'users' );
+        wp_cache_set( 1, array(), 'user_meta' );
       };
       $verify_cache_cleared = function(){
-        $user = wp_cache_get( 'user_1', 'users' );
-        $meta = wp_cache_get( 'user_meta_1', 'user_meta' );
+        $user = wp_cache_get( 1, 'users' );
+        $meta = wp_cache_get( 1, 'user_meta' );
         if ( false !== $user || false !== $meta ) {
           WP_CLI::error( 'Cache was not properly cleared.' );
         }
@@ -174,6 +184,66 @@ Feature: Granular cache flushing operations
       """
       Please provide a valid user ID.
       """
+
+  @skip-object-cache
+  Scenario Outline: Non-positive post IDs fail gracefully
+    Given a WP install
+
+    When I try `wp cache flush-post <id>`
+    Then STDERR should contain:
+      """
+      Please provide a valid post ID.
+      """
+
+    Examples:
+      | id |
+      | 0  |
+      | -1 |
+
+  @skip-object-cache
+  Scenario Outline: Non-positive term IDs fail gracefully
+    Given a WP install
+
+    When I try `wp cache flush-term <id>`
+    Then STDERR should contain:
+      """
+      Please provide a valid term ID.
+      """
+
+    Examples:
+      | id |
+      | 0  |
+      | -1 |
+
+  @skip-object-cache
+  Scenario Outline: Non-positive comment IDs fail gracefully
+    Given a WP install
+
+    When I try `wp cache flush-comment <id>`
+    Then STDERR should contain:
+      """
+      Please provide a valid comment ID.
+      """
+
+    Examples:
+      | id |
+      | 0  |
+      | -1 |
+
+  @skip-object-cache
+  Scenario Outline: Non-positive user IDs fail gracefully
+    Given a WP install
+
+    When I try `wp cache flush-user <id>`
+    Then STDERR should contain:
+      """
+      Please provide a valid user ID.
+      """
+
+    Examples:
+      | id |
+      | 0  |
+      | -1 |
 
   @require-wp-6-1 @skip-object-cache
   Scenario: Flush all post caches on WordPress 6.1+

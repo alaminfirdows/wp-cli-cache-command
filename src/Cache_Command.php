@@ -636,7 +636,7 @@ class Cache_Command extends WP_CLI_Command {
 	 */
 	public function flush_post( $args ) {
 		if ( ! empty( $args ) ) {
-			if ( ! is_numeric( $args[0] ) ) {
+			if ( ! is_numeric( $args[0] ) || (int) $args[0] <= 0 ) {
 				WP_CLI::error( 'Please provide a valid post ID.' );
 			}
 			$post_id = (int) $args[0];
@@ -679,11 +679,14 @@ class Cache_Command extends WP_CLI_Command {
 	 */
 	public function flush_term( $args ) {
 		if ( ! empty( $args ) ) {
-			if ( ! is_numeric( $args[0] ) ) {
+			if ( ! is_numeric( $args[0] ) || (int) $args[0] <= 0 ) {
 				WP_CLI::error( 'Please provide a valid term ID.' );
 			}
 			$term_id = (int) $args[0];
-			clean_term_cache( $term_id );
+			$term = get_term( $term_id );
+			$taxonomy = ( $term && ! is_wp_error( $term ) ) ? $term->taxonomy : '';
+			clean_term_cache( $term_id, $taxonomy );
+			wp_cache_delete( $term_id, 'term_meta' );
 			WP_CLI::success( "Term cache for ID $term_id cleared." );
 		} else {
 			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
@@ -722,11 +725,12 @@ class Cache_Command extends WP_CLI_Command {
 	 */
 	public function flush_comment( $args ) {
 		if ( ! empty( $args ) ) {
-			if ( ! is_numeric( $args[0] ) ) {
+			if ( ! is_numeric( $args[0] ) || (int) $args[0] <= 0 ) {
 				WP_CLI::error( 'Please provide a valid comment ID.' );
 			}
 			$comment_id = (int) $args[0];
 			clean_comment_cache( $comment_id );
+			wp_cache_delete( $comment_id, 'comment_meta' );
 			WP_CLI::success( "Comment cache for ID $comment_id cleared." );
 		} else {
 			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
@@ -765,11 +769,12 @@ class Cache_Command extends WP_CLI_Command {
 	 */
 	public function flush_user( $args ) {
 		if ( ! empty( $args ) ) {
-			if ( ! is_numeric( $args[0] ) ) {
+			if ( ! is_numeric( $args[0] ) || (int) $args[0] <= 0 ) {
 				WP_CLI::error( 'Please provide a valid user ID.' );
 			}
 			$user_id = (int) $args[0];
 			clean_user_cache( $user_id );
+			wp_cache_delete( $user_id, 'user_meta' );
 			WP_CLI::success( "User cache for ID $user_id cleared." );
 		} else {
 			if ( ! function_exists( 'wp_cache_supports' ) || ! wp_cache_supports( 'flush_group' ) ) {
